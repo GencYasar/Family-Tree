@@ -2,9 +2,13 @@ import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 public class Member extends Rectangle {
 
+	public Text text;
 	public double offsetx, offsety;
 	
 	private String name, gender, dob;
@@ -15,21 +19,25 @@ public class Member extends Rectangle {
 	
 	public Member(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		init();
-	}
-	
-	public Member() {
-		super();
 	}
 	
 	public Member(String name, String gender, boolean alive) {
+		
 		super();
 		setName(name);
 		setGender(gender);
 		setAlive(alive);
 	}
 	
+	public Member(String name, String gender, int year, boolean alive) {
+		
+		this(name, gender, alive);
+		setYear(year);
+		setDOB(Integer.toString(year));
+	}
+	
 	public Member(String name, String gender, int month, int day, int year, boolean alive) {
+		
 		this(name, gender, alive);
 		setMonth(month);
 		setDay(day);
@@ -37,21 +45,65 @@ public class Member extends Rectangle {
 		setDOB(month + "/" + day + "/" + year);
 	}
 	
-	public void init() {
-		gender = "male";
-		if (gender.equals("male")) {
-			this.setFill(Color.LIGHTBLUE);
-		}
-		else if (gender.equals("female")) {
-			this.setFill(Color.LIGHTCORAL);
-		}
-		else {
-			this.setFill(Color.LIGHTGREEN);
-		}
-		this.setStroke(Color.BLACK);
-		this.setArcHeight(15);
-		this.setArcWidth(15);
-		//this.toFront();
+	protected void locate() {
+		setX(100);
+		setY(100);
+		setWidth(180);
+		setHeight(60);
+	}
+	
+	protected void init() {
+		setupText();
+		setupColors();
+		setupEvents();
+	}
+	
+	private void setupText() {
+		
+		text = new Text(name);
+		text.setFont(Font.font("Calibri", FontWeight.BOLD, 15));
+		text.setX(getX() + getWidth() / 2 - text.getBoundsInLocal().getWidth() / 2);
+		text.setY(getY() + getHeight() / 2 + text.getBoundsInLocal().getHeight() / 4);
+	}
+	
+	private void setupColors() {
+		
+		if (gender.equals("male"))
+			setFill(Color.SKYBLUE);
+		else if (gender.equals("female"))
+			setFill(Color.LIGHTPINK);
+		else
+			setFill(Color.LIGHTGREEN);
+		setStroke(Color.BLACK);
+		setStrokeWidth(1.5);
+		setArcHeight(20);
+		setArcWidth(20);
+	}
+	
+	private void setupEvents() {
+		
+		setOnMouseEntered(e -> {
+			setStrokeWidth(2);
+			if (gender.equals("male"))
+				setFill(Color.LIGHTSKYBLUE);
+			else if (gender.equals("female"))
+				setFill(Color.PINK);
+			else
+				setFill(Color.PALEGREEN);
+		});
+		setOnMouseExited(e -> {
+			setStrokeWidth(1.5);
+			if (gender.equals("male"))
+				setFill(Color.SKYBLUE);
+			else if (gender.equals("female"))
+				setFill(Color.LIGHTPINK);
+			else
+				setFill(Color.LIGHTGREEN);
+		});
+		setOnMousePressed(e -> {
+			toFront();
+			text.toFront();
+		});
 	}
 
 	public String getName() {
